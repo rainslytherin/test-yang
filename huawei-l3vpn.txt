@@ -1,0 +1,334 @@
+module huawei-l3vpn {
+  namespace "http://www.huawei.com/netconf/vrp/huawei-l3vpn";
+  prefix l3vpn;
+
+  organization
+    "Huawei Technologies Co., Ltd.";
+  contact
+    "Huawei Industrial Base
+     Bantian, Longgang
+     Shenzhen 518129
+     People's Republic of China
+     Website: http://www.huawei.com
+     Email: support@huawei.com";
+  description
+    "Layer 3 Virtual Private Network (L3VPN). An L3VPN is a virtual private network set up over public networks by Internet Service Providers (ISPs) and Network Service Providers (NSPs).";
+
+  typedef l3vpncommonL3vpnPrefixType {
+    type enumeration {
+      enum ipv4uni {
+        description
+          "IPv4 unicast address family.";
+      }
+      enum ipv6uni {
+        description
+          "IPv6 unicast address family.";
+      }
+    }
+    description
+      "the type of l3vpncommonL3vnpPrefix";
+  }
+
+  typedef ifName {
+    type ifNameString;
+    description
+      "ifName";
+  }
+
+  typedef ifNameString {
+    type string {
+      length "1..63";
+    }
+    description
+      "ifName is like ethernet1/1/1/1";
+  }
+
+  typedef ifmam4CfgType {
+    type enumeration {
+      enum config {
+        description
+          "Configured address.";
+      }
+      enum negotiation {
+        description
+          "Negotiated address.";
+      }
+      enum unnumbered {
+        description
+          "Unnumbered address.";
+      }
+    }
+    description
+      "Am4 Config Type";
+  }
+
+  typedef ipv4-address-no-zone {
+    type ipv4-address {
+      pattern '[0-9\.]*';
+    }
+    description
+      "An IPv4 address without a zone index.  This type, derived from
+       ipv4-address, may be used in situations where the zone is
+       known from the context and hence no zone index is needed.";
+  }
+
+  typedef ipv4-address {
+    type string {
+      pattern '(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}'
+            + '([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])'
+            + '(%[\p{N}\p{L}]+)?';
+    }
+    description
+      "The ipv4-address type represents an IPv4 address in
+       dotted-quad notation.  The IPv4 address may include a zone
+       index, separated by a % sign.
+
+       The zone index is used to disambiguate identical address
+       values.  For link-local addresses, the zone index will
+       typically be the interface index number or the name of an
+       interface.  If the zone index is not present, the default
+       zone of the device will be used.
+
+       The canonical format for the zone index is the numerical
+       format";
+  }
+
+  typedef ifmIpv4Mask {
+    type string {
+      length "9..15";
+      pattern '((([1-9]?[0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([1-9]?[0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))';
+    }
+    description
+      "ipv4Mask support mask format";
+  }
+
+  typedef ifmam4IpAddrType {
+    type enumeration {
+      enum main {
+        description
+          "Primary address of an interface.";
+      }
+      enum sub {
+        description
+          "Secondary address of an interface.";
+      }
+    }
+    description
+      "Ip Address Type";
+  }
+
+  typedef ipv6-address-no-zone {
+    type ipv6-address {
+      pattern '[0-9a-fA-F:\.]*';
+    }
+    description
+      "An IPv6 address without a zone index.  This type, derived from
+       ipv6-address, may be used in situations where the zone is
+       known from the context and hence no zone index is needed.";
+    reference
+      "RFC 4291: IP Version 6 Addressing Architecture
+       RFC 4007: IPv6 Scoped Address Architecture
+       RFC 5952: A Recommendation for IPv6 Address Text
+                 Representation";
+  }
+
+  typedef ipv6-address {
+    type string {
+      pattern '((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}'
+            + '((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|'
+            + '(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}'
+            + '(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))'
+            + '(%[\p{N}\p{L}]+)?';
+      pattern '(([^:]+:){6}(([^:]+:[^:]+)|(.*\..*)))|'
+            + '((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)'
+            + '(%.+)?';
+    }
+    description
+      "The ipv6-address type represents an IPv6 address in full,
+       mixed, shortened, and shortened-mixed notation.  The IPv6
+       address may include a zone index, separated by a % sign.
+
+       The zone index is used to disambiguate identical address
+       values.  For link-local addresses, the zone index will
+       typically be the interface index number or the name of an
+       interface.  If the zone index is not present, the default
+       zone of the device will be used.
+
+       The canonical format of IPv6 addresses uses the textual
+       representation defined in Section 4 of RFC 5952.  The
+       canonical format for the zone index is the numerical
+       format as described in Section 11.2 of RFC 4007.";
+    reference
+      "RFC 4291: IP Version 6 Addressing Architecture
+       RFC 4007: IPv6 Scoped Address Architecture
+       RFC 5952: A Recommendation for IPv6 Address Text
+                 Representation";
+  }
+
+  typedef ifmam6IpAddr6Type {
+    type enumeration {
+      enum global {
+        description
+          "Global unicast address.";
+      }
+      enum linkLocal {
+        description
+          "Link local address.";
+      }
+      enum anycast {
+        description
+          "Anycast address.";
+      }
+    }
+    description
+      "Ipv6 Address Type";
+  }
+
+  container l3vpn {
+    description
+      "Layer 3 Virtual Private Network (L3VPN). An L3VPN is a virtual private network set up over public networks by Internet Service Providers (ISPs) and Network Service Providers (NSPs).";
+    container l3vpncomm {
+      description
+        "Universal L3VPN configurations that contain the basic L3VPN configurations and the query information.";
+      container l3vpnInstances {
+        description
+          "List of VPN instances. VPN instances are established to separate VPN routes from public network routes, and separate the routes of different VPNs. Some software features can be bound to multiple VPN instances so that multiple instances can provide a same feature. For example, RIP, OSPF, IS-IS, and BGP multiple instances.";
+        list l3vpnInstance {
+          key "vrfName";
+          description
+            "VPN instances. VPN instances are established to separate VPN routes from public network routes, and separate the routes of different VPNs. Multiple software features can be bound to multiple VPN instances to form a multi-instance that provides multiple features, for example, RIP multi-instance, OSPF multi-instance, IS-IS multi-instance, and BGP multi-instance.";
+          leaf vrfName {
+            type string {
+              length "1..31";
+            }
+            description
+              "VPN instance name. It uniquely identifies a VPN instance. The name is a string of case-sensitive characters.";
+          }
+          leaf vrfDescription {
+            type string {
+              length "1..242";
+              pattern '([^?]*)';
+            }
+            description
+              "The description of a VPN instance. The value is a string of 1 to 242 characters, with spaces supported.";
+          }
+          container vpnInstAFs {
+            description
+              "List of VPN address families.A VPN instance supports the configurations and functions of an address family only after the address family is configured on the instance.";
+            list vpnInstAF {
+              key "afType";
+              max-elements 2;
+              description
+                "Address families of the VPN instance.A VPN instance supports the configurations and functions of an address family only after the address family is configured on the instance.";
+              leaf afType {
+                type l3vpncommonL3vpnPrefixType;
+                description
+                  "Types of the VPN address families.";
+              }
+              leaf vrfRD {
+                type string {
+                  length "3..21";
+                }
+                description
+                  "A VPN address family takes effect only after it is configured with a RD.The format of an RD are as follows:
+                   (1) 16-bit AS number :32-bit user-defined number, for example, 101:3. An AS number ranges from 0 to 65535, and a user-defined number ranges from 0 to 4294967295. The AS number and user-defined number cannot be both 0s. This means that the RD value cannot be 0:0.
+                   (2) 32-bit IP address:16-bit user-defined number, for example: 192.168.122.15:1.The IP address ranges from 0.0.0.0 to 255.255.255.255, and the user-defined number ranges from 0 to 65535.
+                   (3) 32-bit AS number :16-bit user-defined number, for example, 10.11:3. An AS number ranges from 0.0 to 65535.65535 or 0 to 4294967295, and a user-defined number ranges from 0 to 65535. The AS number and user-defined number cannot be both 0s. This means that the RD value cannot be 0.0:0.";
+              }
+            }
+          }
+          container l3vpnIfs {
+            description
+              "List of the interfaces that are bound to the VPN instance.";
+            list l3vpnIf {
+              key "ifName";
+              description
+                "Interfaces bound to the VPN instance. After a VPN instance is configured, an interface bound to the instance needs to be associated with the instance. Otherwise, the interface is a public network interface.
+                 Associating the interface with the VPN instance or canceling the association relationship will clear the configured Layer 3 attributes such as the IPv4 address, IPv6 address, and routing protocol on the interface. If these Layer 3 attributes are still required, you need to configure them again.";
+              leaf ifName {
+                type ifName;
+                description
+                  "Interface name. The formats of interface names are defined based on interface types and device types, for example, the loopback interface: loopback0, and the Ethernet interface: ethernet 0/3/0/7.";
+              }
+              container ipv4Config {
+                description
+                  "Configure IPv4.";
+                leaf addrCfgType {
+                  type ifmam4CfgType;
+                  default "config";
+                  description
+                    "IPv4 address configuration type.";
+                }
+                container am4CfgAddrs {
+                  description
+                    "List of IPv4 addresses.";
+                  list am4CfgAddr {
+                    key "ifIpAddr";
+                    description
+                      "IPv4 address configurations.";
+                    leaf ifIpAddr {
+                      type ipv4-address-no-zone;
+                      description
+                        "IPv4 address.";
+                    }
+                    leaf subnetMask {
+                      type ifmIpv4Mask;
+                      mandatory true;
+                      description
+                        "IPv4 address mask.";
+                    }
+                    leaf addrType {
+                      type ifmam4IpAddrType;
+                      mandatory true;
+                      description
+                        "IPv4 address type.";
+                    }
+                  }
+                }
+              }
+              container ipv6Config {
+                description
+                  "Configure IPv6.";
+                leaf enableFlag {
+                  type boolean;
+                  default "false";
+                  description
+                    "It is used to control whether an interface is enabled with the IPv6 function.";
+                }
+                container am6CfgAddrs {
+                  description
+                    "List of IPv6 addresses.";
+                  list am6CfgAddr {
+                    key "ifIp6Addr";
+                    description
+                      "IPv6 address configurations.";
+                    leaf ifIp6Addr {
+                      type ipv6-address-no-zone;
+                      description
+                        "IPv6 address.";
+                    }
+                    leaf addrPrefixLen {
+                      type uint32 {
+                        range "1..128";
+                      }
+                      mandatory true;
+                      description
+                        "Length of the IPv6 address prefix.";
+                    }
+                    leaf addrType6 {
+                      type ifmam6IpAddr6Type;
+                      mandatory true;
+                      description
+                        "IPv6 address type.";
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
